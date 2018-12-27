@@ -1,33 +1,21 @@
 package ia.servlet;
 
-import ia.jpa.model.Years;
-import ia.jpa.model.controller.YearsJpaController;
 import java.io.IOException;
-import java.util.List;
-import javax.annotation.Resource;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.UserTransaction;
 
 /**
  *
  * @author MieChayakorn
  */
-public class HomeServlet extends HttpServlet {
+public class PrintStockServlet extends HttpServlet {
 
-    @PersistenceUnit(unitName = "IAStockPU")
-    EntityManagerFactory emf;
-    
-    @Resource
-    UserTransaction utx;
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        YearsJpaController yearJPA = new YearsJpaController(utx, emf);
-        List<Years> yearTotal = yearJPA.findYearsEntities();
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -4,9 +4,25 @@
         <servlet-name>HomeServlet</servlet-name>
         <servlet-class>ia.servlet.HomeServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ShowStockServlet</servlet-name>
+        <servlet-class>ia.servlet.ShowStockServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PrintStockServlet</servlet-name>
+        <servlet-class>ia.servlet.PrintStockServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomeServlet</servlet-name>
         <url-pattern>/Home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowStockServlet</servlet-name>
+        <url-pattern>/ShowStock</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PrintStockServlet</servlet-name>
+        <url-pattern>/PrintStock</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
