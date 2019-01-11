@@ -77,7 +77,7 @@
                                 <h5 class="text-uppercase mb-4 white-text wow fadeInDown" data-wow-delay="0.4s"><strong>เลือกปีที่ต้องการ</strong></h5>
                                 <form>
                                     <select class="browser-default custom-select mb-4" name="year">
-                                        <option value="" selected disabled>Choose option</option>
+                                        <option value="" selected disabled>Choose years</option>
                                         <c:forEach items="${yearTotals}" var="yearTotal" varStatus="vs">
                                         <option value="${yearTotal.getYearstock()}">${yearTotal.getYearstock()}</option>
                                         </c:forEach>

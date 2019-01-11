@@ -65,7 +65,7 @@
                         <ul class="navbar-nav nav-flex-icons">
                             <li class="nav-item">
                                 <h3 class="nav-link">
-                                    555
+                                    Year : ${sessionScope.year}
                                 </h3>
                             </li>
                             <li class="nav-item">
@@ -143,7 +143,7 @@
 
                             <!--Card content-->
 
-
+<td class="text-center td-editor" style="border-top: 1px solid #dee2e6; border-bottom:1px solid #dee2e6"><button class="btn btn-sm editRow btn-sm btn-teal" disabled=""><i class="far fa-edit"></i></button><td class="text-center td-editor td-yes" style="border:none"><button class="btn btn-sm btn-primary saveRow" style="cursor:pointer;"><i class="fas fa-check"></i></button></td><td class="text-center td-editor td-yes" style="border:none"><button class="btn btn-sm btn-danger deleteRow" style="cursor:pointer;"><i class="fas fa-trash-alt"></i></button></td></td>
 
 
 
@@ -188,7 +188,7 @@
 
     <!--Copyright-->
     <div class="footer-copyright py-3">
-        Â© 2018 Copyright:
+        © 2018 Copyright:
         <a href="https://mdbootstrap.com/education/bootstrap/" target="_blank"> MDBootstrap.com </a>
     </div>
     <!--/.Copyright-->

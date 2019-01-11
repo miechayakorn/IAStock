@@ -65,7 +65,7 @@
                         <ul class="navbar-nav nav-flex-icons">
                             <li class="nav-item">
                                 <h3 class="nav-link">
-                                    555
+                                    Year : ${sessionScope.year}
                                 </h3>
                             </li>
                             <li class="nav-item">
@@ -236,7 +236,7 @@
 
             <!--Copyright-->
             <div class="footer-copyright py-3">
-                Â© 2018 Copyright:
+                © 2018 Copyright:
                 <a href="https://mdbootstrap.com/education/bootstrap/" target="_blank"> MDBootstrap.com </a>
             </div>
             <!--/.Copyright-->

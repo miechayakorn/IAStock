@@ -11,24 +11,38 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
 
-/**
- *
- * @author MieChayakorn
- */
+
 public class HomeServlet extends HttpServlet {
 
     @PersistenceUnit(unitName = "IAStockPU")
     EntityManagerFactory emf;
-    
+
     @Resource
     UserTransaction utx;
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            request.getSession(true);
+        }
+        
+        String year = request.getParameter("year");
         YearsJpaController yearJPA = new YearsJpaController(utx, emf);
         List<Years> yearTotals = yearJPA.findYearsEntities();
+
         request.setAttribute("yearTotals", yearTotals);
+        
+
+        if (year != null) {
+            session.setAttribute("year",year);
+            response.sendRedirect("Dashboard");
+            return;
+        }
+        
         getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
     }
 
