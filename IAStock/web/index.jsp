@@ -1,4 +1,5 @@
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -64,18 +65,29 @@
                             <div class="col-md-12 mb-4 white-text text-center">
                                 <h1 class="h1-reponsive white-text text-uppercase font-weight-bold mb-0 pt-md-5 pt-5 wow fadeInDown" data-wow-delay="0.3s"><strong>IA-Stock</strong></h1>
                                 <hr class="hr-light my-4 wow fadeInDown" data-wow-delay="0.4s">
+                                
+                                <!--index-->
+                                <c:if test="${pageContext.request.requestURI == '/IAStock/'}">
+                                    <a href="Home" class="btn btn-outline-white wow fadeInDown" data-wow-delay="0.4s">Home</a>
+                                </c:if>
+                                
+                                <!--Home-->
+                                <c:if test="${pageContext.request.requestURI == '/IAStock/index.jsp'}">
+                                    
                                 <h5 class="text-uppercase mb-4 white-text wow fadeInDown" data-wow-delay="0.4s"><strong>เลือกปีที่ต้องการ</strong></h5>
                                 <form>
-                                    <select class="browser-default custom-select mb-4" name="years">
+                                    <select class="browser-default custom-select mb-4" name="year">
                                         <option value="" selected disabled>Choose option</option>
-                                        <option value="1">Feedback</option>
-                                        <option value="2">Report a bug</option>
-                                        <option value="3">Feature request</option>
-                                        <option value="4">Feature request</option>
+                                        <c:forEach items="${yearTotals}" var="yearTotal" varStatus="vs">
+                                        <option value="${yearTotal.getYearstock()}">${yearTotal.getYearstock()}</option>
+                                        </c:forEach>
+                                        
                                     </select>
                                     <button class="btn btn-outline-white wow fadeInDown" data-wow-delay="0.4s">submit</button>
                                 </form>
-
+                                </c:if>
+                                
+                                
                             </div>
                             <!--Grid column-->
                         </div>

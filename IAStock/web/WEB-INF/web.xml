@@ -33,10 +33,6 @@
         <url-pattern>/Home</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ShowStockServlet</servlet-name>
-        <url-pattern>/ShowStock</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>PrintStockServlet</servlet-name>
         <url-pattern>/PrintStock</url-pattern>
     </servlet-mapping>

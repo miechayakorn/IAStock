@@ -27,7 +27,9 @@ public class HomeServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         YearsJpaController yearJPA = new YearsJpaController(utx, emf);
-        List<Years> yearTotal = yearJPA.findYearsEntities();
+        List<Years> yearTotals = yearJPA.findYearsEntities();
+        request.setAttribute("yearTotals", yearTotals);
+        getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

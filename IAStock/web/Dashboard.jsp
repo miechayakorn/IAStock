@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -235,7 +236,7 @@
 
             <!--Copyright-->
             <div class="footer-copyright py-3">
-                © 2018 Copyright:
+                Â© 2018 Copyright:
                 <a href="https://mdbootstrap.com/education/bootstrap/" target="_blank"> MDBootstrap.com </a>
             </div>
             <!--/.Copyright-->
