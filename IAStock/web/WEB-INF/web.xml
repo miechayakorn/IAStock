@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <filter>
+        <filter-name>CheckYearSessionFilter</filter-name>
+        <filter-class>ia.Filter.CheckYearSessionFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CheckYearSessionFilter</filter-name>
+        <servlet-name>StockServlet</servlet-name>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CheckYearSessionFilter</filter-name>
+        <servlet-name>HistoryServlet</servlet-name>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CheckYearSessionFilter</filter-name>
+        <servlet-name>DashboardServlet</servlet-name>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CheckYearSessionFilter</filter-name>
+        <servlet-name>PrintStockServlet</servlet-name>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
     <servlet>
         <servlet-name>HomeServlet</servlet-name>
         <servlet-class>ia.servlet.HomeServlet</servlet-class>
