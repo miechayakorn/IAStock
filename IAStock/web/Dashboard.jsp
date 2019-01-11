@@ -68,7 +68,7 @@
                                 </h3>
                             </li>
                             <li class="nav-item">
-                                <a href="Logout" class="btn btn-primary btn-sm waves-effect waves-light">
+                                <a href="Logout" class="btn btn-warning btn-sm waves-effect waves-light">
                                     Exit <i class="fas fa-sign-out-alt"></i>
                                 </a>
                             </li>
