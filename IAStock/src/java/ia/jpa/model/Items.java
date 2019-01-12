@@ -37,6 +37,11 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Items.findByPrice", query = "SELECT i FROM Items i WHERE i.price = :price")})
 public class Items implements Serializable {
 
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ITEMTOTAL")
+    private int itemtotal;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -136,6 +141,14 @@ public class Items implements Serializable {
     @Override
     public String toString() {
         return "ia.jpa.model.Items[ itemid=" + itemid + " ]";
+    }
+
+    public int getItemtotal() {
+        return itemtotal;
+    }
+
+    public void setItemtotal(int itemtotal) {
+        this.itemtotal = itemtotal;
     }
     
 }
