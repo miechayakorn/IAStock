@@ -42,6 +42,9 @@ public class HomeServlet extends HttpServlet {
             response.sendRedirect("Dashboard");
             return;
         }
+        String[] uris = request.getRequestURI().split("/");
+        String uri = "/" + uris[2];
+        request.setAttribute("parameter", uri);
         
         getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
     }
