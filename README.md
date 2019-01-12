@@ -23,6 +23,7 @@ status int check (status in (0,1)) not null);
 create table items (
 itemId varchar(30) primary key,
 itemName varchar(100) not null,
+itemTotal int not null,
 price double not null,
 yearStock varchar(4) not null,
 FOREIGN KEY (yearStock) REFERENCES years(yearStock));
