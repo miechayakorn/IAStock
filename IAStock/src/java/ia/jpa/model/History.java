@@ -40,6 +40,11 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "History.findByAnnotation", query = "SELECT h FROM History h WHERE h.annotation = :annotation")})
 public class History implements Serializable {
 
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "PRICE")
+    private double price;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -163,6 +168,14 @@ public class History implements Serializable {
     @Override
     public String toString() {
         return "ia.jpa.model.History[ historyid=" + historyid + " ]";
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
     
 }

@@ -39,6 +39,12 @@ public class Items implements Serializable {
 
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 20)
+    @Column(name = "UNIT")
+    private String unit;
+
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "ITEMTOTAL")
     private int itemtotal;
 
@@ -149,6 +155,14 @@ public class Items implements Serializable {
 
     public void setItemtotal(int itemtotal) {
         this.itemtotal = itemtotal;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
     
 }
