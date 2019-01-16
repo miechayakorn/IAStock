@@ -25,6 +25,7 @@ itemId varchar(30) primary key,
 itemName varchar(100) not null,
 itemTotal int not null,
 price double not null,
+unit varchar(20) not null,
 yearStock varchar(4) not null,
 FOREIGN KEY (yearStock) REFERENCES years(yearStock));
 ```
@@ -32,6 +33,7 @@ FOREIGN KEY (yearStock) REFERENCES years(yearStock));
 create table history (
 historyId int GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) primary key,
 itemId varchar(30) not null,
+price double not null,
 quantity int not null,
 type varchar(40) not null,
 timestamp timestamp not null,
