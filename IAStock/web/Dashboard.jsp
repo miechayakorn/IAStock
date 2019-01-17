@@ -1,3 +1,11 @@
+<%
+    HttpSession sessionYear = request.getSession(false);
+    if (sessionYear == null) {
+        response.sendRedirect("Home");
+    } else if (sessionYear.getAttribute("year") == null) {
+        response.sendRedirect("Home");
+    }
+%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
