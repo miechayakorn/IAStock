@@ -237,17 +237,6 @@
 
                                 </tbody>
                             </table>
-
-
-
-
-
-                            <!--<button class="btn btn-sm editRow btn-sm btn-teal" disabled="">
-                                <i class="far fa-edit"></i></button>
-                            <button class="btn btn-sm btn-primary saveRow" style="cursor:pointer;">
-                                <i class="fas fa-check"></i></button>
-                            <button class="btn btn-sm btn-danger deleteRow" style="cursor:pointer;">
-                                <i class="fas fa-trash-alt"></i></button>-->
                         </div>
                     </div>
                 </div>

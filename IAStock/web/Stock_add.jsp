@@ -23,7 +23,6 @@
         <link href="css/mdb.min.css" rel="stylesheet">
         <!-- Your custom styles (optional) -->
         <link href="css/style.min.css" rel="stylesheet">
-        <link href="jquery-bootgrid/jquery.bootgrid.min.css" rel="stylesheet">
         <style>
 
             .map-container{
@@ -103,10 +102,6 @@
                         <i class="fas fa-map mr-3"></i>Stock</a>
                     <a href="History" class="list-group-item list-group-item-action waves-effect">
                         <i class="fas fa-history mr-3"></i>History</a>
-                    <!-- <a href="#" class="list-group-item list-group-item-action waves-effect">
-                      <i class="fas fa-user mr-3"></i>Profile</a>
-                    <a href="#" class="list-group-item list-group-item-action waves-effect">
-                      <i class="fas fa-table mr-3"></i>Tables</a> -->
 
                 </div>
 
@@ -131,9 +126,9 @@
                             <span>/</span>
                             <span>Stock</span>
                         </h4>
-                        
+
                         <div class="d-flex justify-content-center">
-                            
+
                             <a class="btn btn-danger btn-sm my-0 p waves-effect waves-light" href="Stock">
                                 <i class="fas fa-arrow-left"></i> Back
                             </a>
@@ -158,37 +153,45 @@
                                 <strong>Stock</strong>
                             </div>
                             <!--Content-->
-                            <table id="grid-basic" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                            <table id="grid-basic" class="table table-striped table-bordered text-center" cellspacing="0" width="100%">
                                 <thead>
-                                    <tr>
-                                        <th class="th-sm">รหัสวัสดุ
+                                    <tr class="d-flex">
+                                        <th class="col-1">รหัสวัสดุ
 
                                         </th>
-                                        <th class="th-sm">ชื่อวัสดุ
+                                        <th class="col-4">ชื่อวัสดุ
 
                                         </th>
-                                        <th class="th-sm">ราคาต่อหน่วย
+                                        <th class="col-1">ราคาต่อหน่วย
 
                                         </th>
-                                        <th class="th-sm">จำนวนคงเหลือ
+                                        <th class="col-1">จำนวนคงเหลือ
 
                                         </th>
-                                        <th class="th-sm">รายการ
+                                        <th class="col-5">รายการ
 
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Tiger Nixon</td>
-                                        <td>System Architect</td>
-                                        <td>Edinburgh</td>
-                                        <td>61</td>
-                                        <td>2011/04/25</td>
-                                        <td>
-                                            <div class="">
-                                                
-                                            </div>
+                                    <tr class="d-flex">
+                                        <td class="col-1">S041</td>
+                                        <td class="col-4">System Architect</td>
+                                        <td class="col-1">56</td>
+                                        <td class="col-1">61</td>
+                                        <td class="col-5">
+                                            <form>
+                                                <div class="form-row">
+                                                    <div class="col-5 mt-1">
+                                                        <input type="number" name="add" min="0" class="form-control" required placeholder="จำนวนที่เพิ่ม">
+                                                        <input type="hidden" name="id" value="">
+                                                    </div>
+                                                    <div class="col-4 mt-1">
+                                                        <input type="text" class="form-control" placeholder="ลงชื่อ">
+                                                    </div>
+                                                    <button type="submit" class="btn btn-md btn-success"><i class="fas fa-plus-square"></i></button>
+                                                </div>
+                                            </form>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -231,7 +234,6 @@
 <!-- SCRIPTS -->
 <!-- JQuery -->
 <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
-<script type="text/javascript" src="jquery-bootgrid/jquery.bootgrid.min.js"></script>
 <!-- Bootstrap tooltips -->
 <script type="text/javascript" src="js/popper.min.js"></script>
 <!-- Bootstrap core JavaScript -->
@@ -242,7 +244,6 @@
 <script type="text/javascript">
     // Animations initialization
     new WOW().init();
-    $("#grid-basic").bootgrid();
 </script>
 </body>
 
