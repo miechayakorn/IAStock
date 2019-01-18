@@ -33,14 +33,20 @@ public class StockAddServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession sessionYear = request.getSession(false);
+        if (sessionYear == null) {
+            response.sendRedirect("Home");
+            return;
+        } else if (sessionYear.getAttribute("year") == null) {
+            response.sendRedirect("Home");
+            return;
+        }
         String add = request.getParameter("add");
         String id = request.getParameter("id");
         String annotation = request.getParameter("annotation");
 
-        HttpSession session = request.getSession(false);
-        
         YearsJpaController yearJpa = new YearsJpaController(utx, emf);
-        Years yearSearch = yearJpa.findYears((String) session.getAttribute("year"));
+        Years yearSearch = yearJpa.findYears((String) sessionYear.getAttribute("year"));
         List<Items> itemsYear = yearSearch.getItemsList();
 
         if (add != null && id != null) {
