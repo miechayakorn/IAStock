@@ -89,6 +89,15 @@ public class History implements Serializable {
         this.timestamp = timestamp;
     }
 
+    public History(Items itemid, double price, int quantity, String type, Date timestamp, Years yearstock) {
+        this.itemid = itemid;
+        this.price = price;
+        this.quantity = quantity;
+        this.type = type;
+        this.timestamp = timestamp;
+        this.yearstock = yearstock;
+    }
+
     public Integer getHistoryid() {
         return historyid;
     }
@@ -177,5 +186,5 @@ public class History implements Serializable {
     public void setPrice(double price) {
         this.price = price;
     }
-    
+
 }

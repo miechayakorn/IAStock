@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
     HttpSession sessionYear = request.getSession(false);
     if (sessionYear == null) {
@@ -174,25 +175,28 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+
                                     <tr class="d-flex">
-                                        <td class="col-1">S041</td>
-                                        <td class="col-4">System Architect</td>
-                                        <td class="col-1">56</td>
-                                        <td class="col-1">61</td>
-                                        <td class="col-5">
-                                            <form>
-                                                <div class="form-row">
-                                                    <div class="col-5 mt-1">
-                                                        <input type="number" name="add" min="0" class="form-control" required placeholder="จำนวนที่เพิ่ม">
-                                                        <input type="hidden" name="id" value="">
+                                        <c:forEach items="${items}" varStatus="vs" var="item">
+                                            <td class="col-1">${item.itemid}</td>
+                                            <td class="col-4">${item.itemname}</td>
+                                            <td class="col-1">${item.unit}</td>
+                                            <td class="col-1">${item.itemtotal}</td>
+                                            <td class="col-5">
+                                                <form action="Stock_add">
+                                                    <div class="form-row">
+                                                        <div class="col-5 mt-1">
+                                                            <input type="number" name="add" min="0" class="form-control" required placeholder="จำนวนที่เพิ่ม">
+                                                            <input type="hidden" name="id" value="${item.itemid}">
+                                                        </div>
+                                                        <div class="col-4 mt-1">
+                                                            <input type="text" name="annotation" class="form-control" placeholder="ลงชื่อ">
+                                                        </div>
+                                                        <button type="submit" class="btn btn-md btn-success"><i class="fas fa-plus-square"></i></button>
                                                     </div>
-                                                    <div class="col-4 mt-1">
-                                                        <input type="text" name="annotation" class="form-control" placeholder="ลงชื่อ">
-                                                    </div>
-                                                    <button type="submit" class="btn btn-md btn-success"><i class="fas fa-plus-square"></i></button>
-                                                </div>
-                                            </form>
-                                        </td>
+                                                </form>
+                                            </td>
+                                        </c:forEach>
                                     </tr>
                                 </tbody>
                             </table>
