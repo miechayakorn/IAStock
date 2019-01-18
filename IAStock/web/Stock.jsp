@@ -135,10 +135,10 @@
                         <div class="d-flex justify-content-center">
                             <p class="mb-2 mb-sm-0 pt-1 mr-3">เบิกใช้/เพิ่มของ</p>
                             
-                            <a class="btn btn-danger btn-sm my-0 p waves-effect waves-light" href="">
+                            <a class="btn btn-danger btn-sm my-0 p waves-effect waves-light" href="Stock_draw">
                                 <i class="fas fa-minus-square"></i>
                             </a>
-                            <a class="btn btn-success btn-sm my-0 p waves-effect waves-light" href="">
+                            <a class="btn btn-success btn-sm my-0 p waves-effect waves-light" href="Stock_add">
                                 <i class="fas fa-plus-square"></i>
                             </a>
 

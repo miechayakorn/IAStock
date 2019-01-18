@@ -38,15 +38,16 @@ public class StockAddServlet extends HttpServlet {
         String annotation = request.getParameter("annotation");
 
         HttpSession session = request.getSession(false);
+        
         YearsJpaController yearJpa = new YearsJpaController(utx, emf);
         Years yearSearch = yearJpa.findYears((String) session.getAttribute("year"));
-        List<Items> itemsSearch = yearSearch.getItemsList();
+        List<Items> itemsYear = yearSearch.getItemsList();
 
         if (add != null && id != null) {
             ItemsJpaController itemJpa = new ItemsJpaController(utx, emf);
             HistoryJpaController historyJpa = new HistoryJpaController(utx, emf);
 
-            for (Items items : itemsSearch) {
+            for (Items items : itemsYear) {
                 if (items.getItemid().equals(id)) {
                     int addInt = Integer.parseInt(add);
                     int itemTotal = items.getItemtotal() + addInt;
@@ -71,7 +72,7 @@ public class StockAddServlet extends HttpServlet {
                 }
             }
         }
-        request.setAttribute("items", itemsSearch);
+        request.setAttribute("items", itemsYear);
         getServletContext().getRequestDispatcher("/Stock_add.jsp").forward(request, response);
     }
 

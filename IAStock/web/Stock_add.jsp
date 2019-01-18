@@ -189,6 +189,7 @@
                                                             <input type="number" name="add" min="0" class="form-control" required placeholder="จำนวนที่เพิ่ม">
                                                             <input type="hidden" name="id" value="${item.itemid}">
                                                         </div>
+                                                        <font color="#FD494C">*</font>
                                                         <div class="col-4 mt-1">
                                                             <input type="text" name="annotation" class="form-control" placeholder="ลงชื่อ">
                                                         </div>

@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
 
-
 public class HomeServlet extends HttpServlet {
 
     @PersistenceUnit(unitName = "IAStockPU")
@@ -28,24 +27,28 @@ public class HomeServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if (session == null) {
             request.getSession(true);
+        } else {
+            if (session.getAttribute("year") != null) {
+                response.sendRedirect("Dashboard");
+                return;
+            }
         }
-        
+
         String year = request.getParameter("year");
         YearsJpaController yearJPA = new YearsJpaController(utx, emf);
         List<Years> yearTotals = yearJPA.findYearsEntities();
 
         request.setAttribute("yearTotals", yearTotals);
-        
 
         if (year != null) {
-            session.setAttribute("year",year);
+            session.setAttribute("year", year);
             response.sendRedirect("Dashboard");
             return;
         }
         String[] uris = request.getRequestURI().split("/");
         String uri = "/" + uris[2];
         request.setAttribute("parameter", uri);
-        
+
         getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
     }
 
