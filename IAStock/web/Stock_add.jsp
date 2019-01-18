@@ -187,7 +187,7 @@
                                                         <input type="hidden" name="id" value="">
                                                     </div>
                                                     <div class="col-4 mt-1">
-                                                        <input type="text" class="form-control" placeholder="ลงชื่อ">
+                                                        <input type="text" name="annotation" class="form-control" placeholder="ลงชื่อ">
                                                     </div>
                                                     <button type="submit" class="btn btn-md btn-success"><i class="fas fa-plus-square"></i></button>
                                                 </div>

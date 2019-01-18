@@ -28,6 +28,10 @@
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>ia.servlet.LogoutServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>StockAddServlet</servlet-name>
+        <servlet-class>ia.servlet.StockAddServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomeServlet</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -51,6 +55,10 @@
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/Logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StockAddServlet</servlet-name>
+        <url-pattern>/Stock_add</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
