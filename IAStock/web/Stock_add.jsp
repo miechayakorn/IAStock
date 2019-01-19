@@ -123,9 +123,9 @@
                     <div class="card-body d-sm-flex justify-content-between">
 
                         <h4 class="mb-2 mb-sm-0 pt-1">
-                            <span style="color:#007bff;" >Home Page</span>
+                            <a style="color:#007bff;" href="Stock">Stock</a>
                             <span>/</span>
-                            <span>Stock</span>
+                            <span>Add</span>
                         </h4>
 
                         <div class="d-flex justify-content-center">
@@ -175,9 +175,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-
-                                    <tr class="d-flex">
-                                        <c:forEach items="${items}" varStatus="vs" var="item">
+                                    <c:forEach items="${items}" varStatus="vs" var="item">
+                                        <tr class="d-flex">        
                                             <td class="col-1">${item.itemid}</td>
                                             <td class="col-4">${item.itemname}</td>
                                             <td class="col-1">${item.unit}</td>
@@ -186,7 +185,7 @@
                                                 <form action="Stock_add">
                                                     <div class="form-row">
                                                         <div class="col-5 mt-1">
-                                                            <input type="number" name="add" min="0" class="form-control" required placeholder="จำนวนที่เพิ่ม">
+                                                            <input type="number" name="add" min="0" class="form-control" required placeholder="จำนวนที่ซื้อเพิ่ม">
                                                             <input type="hidden" name="id" value="${item.itemid}">
                                                         </div>
                                                         <font color="#FD494C">*</font>
@@ -197,8 +196,8 @@
                                                     </div>
                                                 </form>
                                             </td>
-                                        </c:forEach>
-                                    </tr>
+                                        </tr>    
+                                    </c:forEach>
                                 </tbody>
                             </table>
                         </div>

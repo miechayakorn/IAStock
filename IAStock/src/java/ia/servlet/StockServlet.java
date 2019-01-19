@@ -1,16 +1,43 @@
 package ia.servlet;
 
+import ia.jpa.model.Items;
+import ia.jpa.model.Years;
+import ia.jpa.model.controller.YearsJpaController;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.List;
+import javax.annotation.Resource;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.transaction.UserTransaction;
 
 public class StockServlet extends HttpServlet {
 
+    @PersistenceUnit(unitName = "IAStockPU")
+    EntityManagerFactory emf;
+
+    @Resource
+    UserTransaction utx;
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession sessionYear = request.getSession(false);
+        if (sessionYear == null) {
+            response.sendRedirect("Home");
+            return;
+        } else if (sessionYear.getAttribute("year") == null) {
+            response.sendRedirect("Home");
+            return;
+        }
+        YearsJpaController yearJpa = new YearsJpaController(utx, emf);
+        Years yearSearch = yearJpa.findYears((String) sessionYear.getAttribute("year"));
+        List<Items> itemsYear = yearSearch.getItemsList();
+        
+        request.setAttribute("items", itemsYear);
         getServletContext().getRequestDispatcher("/Stock.jsp").forward(request, response);
     }
 

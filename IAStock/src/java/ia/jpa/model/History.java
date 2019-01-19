@@ -37,7 +37,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "History.findByQuantity", query = "SELECT h FROM History h WHERE h.quantity = :quantity")
     , @NamedQuery(name = "History.findByType", query = "SELECT h FROM History h WHERE h.type = :type")
     , @NamedQuery(name = "History.findByTimestamp", query = "SELECT h FROM History h WHERE h.timestamp = :timestamp")
-    , @NamedQuery(name = "History.findByAnnotation", query = "SELECT h FROM History h WHERE h.annotation = :annotation")})
+    , @NamedQuery(name = "History.findByAnnotation", query = "SELECT h FROM History h WHERE h.annotation = :annotation")
+    , @NamedQuery(name = "History.findSumQuantity", query = "SELECT SUM(h.quantity) FROM History h WHERE h.itemid = :itemid and h.type = :type and h.yearstock = :year")})
 public class History implements Serializable {
 
     @Basic(optional = false)

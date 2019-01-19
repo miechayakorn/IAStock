@@ -204,6 +204,19 @@ public class HistoryJpaController implements Serializable {
         }
     }
 
+    public Long findSumQuantity(Items itemid, String type, Years year) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createNamedQuery("History.findSumQuantity");
+            query.setParameter("itemid", itemid);
+            query.setParameter("type", type);
+            query.setParameter("year", year);
+            return (Long) query.getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+
     public int getHistoryCount() {
         EntityManager em = getEntityManager();
         try {
@@ -216,5 +229,5 @@ public class HistoryJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }
