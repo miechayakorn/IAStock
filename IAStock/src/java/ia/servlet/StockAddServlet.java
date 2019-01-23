@@ -5,6 +5,7 @@ import ia.jpa.model.Items;
 import ia.jpa.model.Years;
 import ia.jpa.model.controller.HistoryJpaController;
 import ia.jpa.model.controller.ItemsJpaController;
+import ia.jpa.model.controller.SummarizeJpaController;
 import ia.jpa.model.controller.YearsJpaController;
 import ia.jpa.model.controller.exceptions.NonexistentEntityException;
 import ia.jpa.model.controller.exceptions.RollbackFailureException;
@@ -52,6 +53,7 @@ public class StockAddServlet extends HttpServlet {
         if (add != null && id != null) {
             ItemsJpaController itemJpa = new ItemsJpaController(utx, emf);
             HistoryJpaController historyJpa = new HistoryJpaController(utx, emf);
+            SummarizeJpaController Summarize = new SummarizeJpaController(utx, emf);
 
             for (Items items : itemsYear) {
                 if (items.getItemid().equals(id)) {

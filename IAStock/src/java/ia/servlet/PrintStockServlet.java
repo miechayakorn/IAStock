@@ -2,6 +2,7 @@ package ia.servlet;
 
 import ia.jpa.model.History;
 import ia.jpa.model.Items;
+import ia.jpa.model.Summarize;
 import ia.jpa.model.Years;
 import ia.jpa.model.controller.HistoryJpaController;
 import ia.jpa.model.controller.ItemsJpaController;
@@ -41,9 +42,10 @@ public class PrintStockServlet extends HttpServlet {
         
         
         Years yearSearch = yearJpa.findYears((String) session.getAttribute("year"));
-        List<Items> itemYears = yearSearch.getItemsList();
-        for (Items itemYear : itemYears) {
-            System.out.println(historyJpa.findSumQuantity(itemYear, "add", yearSearch));
+        List<Summarize> itemYears = yearSearch.getSummarizeList();
+        for (Summarize itemYear : itemYears) {
+            System.out.println("-----------------------"+itemYear.getAddtotal());
+            
         }
         
     }
