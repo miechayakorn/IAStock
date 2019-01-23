@@ -5,7 +5,7 @@
  */
 package ia.jpa.model.controller;
 
-import ia.jpa.model.History;
+import ia.jpa.model.Categorys;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -14,6 +14,7 @@ import javax.persistence.criteria.Root;
 import ia.jpa.model.Items;
 import ia.jpa.model.Years;
 import ia.jpa.model.controller.exceptions.NonexistentEntityException;
+import ia.jpa.model.controller.exceptions.PreexistingEntityException;
 import ia.jpa.model.controller.exceptions.RollbackFailureException;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -24,9 +25,9 @@ import javax.transaction.UserTransaction;
  *
  * @author User
  */
-public class HistoryJpaController implements Serializable {
+public class CategorysJpaController implements Serializable {
 
-    public HistoryJpaController(UserTransaction utx, EntityManagerFactory emf) {
+    public CategorysJpaController(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
         this.emf = emf;
     }
@@ -37,28 +38,28 @@ public class HistoryJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(History history) throws RollbackFailureException, Exception {
+    public void create(Categorys categorys) throws PreexistingEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Items itemid = history.getItemid();
+            Items itemid = categorys.getItemid();
             if (itemid != null) {
                 itemid = em.getReference(itemid.getClass(), itemid.getItemid());
-                history.setItemid(itemid);
+                categorys.setItemid(itemid);
             }
-            Years yearstock = history.getYearstock();
+            Years yearstock = categorys.getYearstock();
             if (yearstock != null) {
                 yearstock = em.getReference(yearstock.getClass(), yearstock.getYearstock());
-                history.setYearstock(yearstock);
+                categorys.setYearstock(yearstock);
             }
-            em.persist(history);
+            em.persist(categorys);
             if (itemid != null) {
-                itemid.getHistoryList().add(history);
+                itemid.getCategorysList().add(categorys);
                 itemid = em.merge(itemid);
             }
             if (yearstock != null) {
-                yearstock.getHistoryList().add(history);
+                yearstock.getCategorysList().add(categorys);
                 yearstock = em.merge(yearstock);
             }
             utx.commit();
@@ -68,6 +69,9 @@ public class HistoryJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
+            if (findCategorys(categorys.getCategory()) != null) {
+                throw new PreexistingEntityException("Categorys " + categorys + " already exists.", ex);
+            }
             throw ex;
         } finally {
             if (em != null) {
@@ -76,39 +80,39 @@ public class HistoryJpaController implements Serializable {
         }
     }
 
-    public void edit(History history) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void edit(Categorys categorys) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            History persistentHistory = em.find(History.class, history.getHistoryid());
-            Items itemidOld = persistentHistory.getItemid();
-            Items itemidNew = history.getItemid();
-            Years yearstockOld = persistentHistory.getYearstock();
-            Years yearstockNew = history.getYearstock();
+            Categorys persistentCategorys = em.find(Categorys.class, categorys.getCategory());
+            Items itemidOld = persistentCategorys.getItemid();
+            Items itemidNew = categorys.getItemid();
+            Years yearstockOld = persistentCategorys.getYearstock();
+            Years yearstockNew = categorys.getYearstock();
             if (itemidNew != null) {
                 itemidNew = em.getReference(itemidNew.getClass(), itemidNew.getItemid());
-                history.setItemid(itemidNew);
+                categorys.setItemid(itemidNew);
             }
             if (yearstockNew != null) {
                 yearstockNew = em.getReference(yearstockNew.getClass(), yearstockNew.getYearstock());
-                history.setYearstock(yearstockNew);
+                categorys.setYearstock(yearstockNew);
             }
-            history = em.merge(history);
+            categorys = em.merge(categorys);
             if (itemidOld != null && !itemidOld.equals(itemidNew)) {
-                itemidOld.getHistoryList().remove(history);
+                itemidOld.getCategorysList().remove(categorys);
                 itemidOld = em.merge(itemidOld);
             }
             if (itemidNew != null && !itemidNew.equals(itemidOld)) {
-                itemidNew.getHistoryList().add(history);
+                itemidNew.getCategorysList().add(categorys);
                 itemidNew = em.merge(itemidNew);
             }
             if (yearstockOld != null && !yearstockOld.equals(yearstockNew)) {
-                yearstockOld.getHistoryList().remove(history);
+                yearstockOld.getCategorysList().remove(categorys);
                 yearstockOld = em.merge(yearstockOld);
             }
             if (yearstockNew != null && !yearstockNew.equals(yearstockOld)) {
-                yearstockNew.getHistoryList().add(history);
+                yearstockNew.getCategorysList().add(categorys);
                 yearstockNew = em.merge(yearstockNew);
             }
             utx.commit();
@@ -120,9 +124,9 @@ public class HistoryJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = history.getHistoryid();
-                if (findHistory(id) == null) {
-                    throw new NonexistentEntityException("The history with id " + id + " no longer exists.");
+                String id = categorys.getCategory();
+                if (findCategorys(id) == null) {
+                    throw new NonexistentEntityException("The categorys with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -133,29 +137,29 @@ public class HistoryJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(String id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            History history;
+            Categorys categorys;
             try {
-                history = em.getReference(History.class, id);
-                history.getHistoryid();
+                categorys = em.getReference(Categorys.class, id);
+                categorys.getCategory();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The history with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The categorys with id " + id + " no longer exists.", enfe);
             }
-            Items itemid = history.getItemid();
+            Items itemid = categorys.getItemid();
             if (itemid != null) {
-                itemid.getHistoryList().remove(history);
+                itemid.getCategorysList().remove(categorys);
                 itemid = em.merge(itemid);
             }
-            Years yearstock = history.getYearstock();
+            Years yearstock = categorys.getYearstock();
             if (yearstock != null) {
-                yearstock.getHistoryList().remove(history);
+                yearstock.getCategorysList().remove(categorys);
                 yearstock = em.merge(yearstock);
             }
-            em.remove(history);
+            em.remove(categorys);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -171,19 +175,19 @@ public class HistoryJpaController implements Serializable {
         }
     }
 
-    public List<History> findHistoryEntities() {
-        return findHistoryEntities(true, -1, -1);
+    public List<Categorys> findCategorysEntities() {
+        return findCategorysEntities(true, -1, -1);
     }
 
-    public List<History> findHistoryEntities(int maxResults, int firstResult) {
-        return findHistoryEntities(false, maxResults, firstResult);
+    public List<Categorys> findCategorysEntities(int maxResults, int firstResult) {
+        return findCategorysEntities(false, maxResults, firstResult);
     }
 
-    private List<History> findHistoryEntities(boolean all, int maxResults, int firstResult) {
+    private List<Categorys> findCategorysEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(History.class));
+            cq.select(cq.from(Categorys.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -195,33 +199,20 @@ public class HistoryJpaController implements Serializable {
         }
     }
 
-    public History findHistory(Integer id) {
+    public Categorys findCategorys(String id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(History.class, id);
+            return em.find(Categorys.class, id);
         } finally {
             em.close();
         }
     }
 
-        public Long findSumQuantity(Items itemid, String type, Years year) {
-        EntityManager em = getEntityManager();
-        try {
-            Query query = em.createNamedQuery("History.findSumQuantity");
-            query.setParameter("itemid", itemid);
-            query.setParameter("type", type);
-            query.setParameter("year", year);
-            return (Long) query.getSingleResult();
-        } finally {
-            em.close();
-        }
-    }
-
-    public int getHistoryCount() {
+    public int getCategorysCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<History> rt = cq.from(History.class);
+            Root<Categorys> rt = cq.from(Categorys.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

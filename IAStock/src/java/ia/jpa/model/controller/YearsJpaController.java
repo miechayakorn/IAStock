@@ -14,6 +14,8 @@ import ia.jpa.model.Items;
 import java.util.ArrayList;
 import java.util.List;
 import ia.jpa.model.History;
+import ia.jpa.model.Summarize;
+import ia.jpa.model.Categorys;
 import ia.jpa.model.Years;
 import ia.jpa.model.controller.exceptions.IllegalOrphanException;
 import ia.jpa.model.controller.exceptions.NonexistentEntityException;
@@ -25,7 +27,7 @@ import javax.transaction.UserTransaction;
 
 /**
  *
- * @author Acer_E5
+ * @author User
  */
 public class YearsJpaController implements Serializable {
 
@@ -47,6 +49,12 @@ public class YearsJpaController implements Serializable {
         if (years.getHistoryList() == null) {
             years.setHistoryList(new ArrayList<History>());
         }
+        if (years.getSummarizeList() == null) {
+            years.setSummarizeList(new ArrayList<Summarize>());
+        }
+        if (years.getCategorysList() == null) {
+            years.setCategorysList(new ArrayList<Categorys>());
+        }
         EntityManager em = null;
         try {
             utx.begin();
@@ -63,6 +71,18 @@ public class YearsJpaController implements Serializable {
                 attachedHistoryList.add(historyListHistoryToAttach);
             }
             years.setHistoryList(attachedHistoryList);
+            List<Summarize> attachedSummarizeList = new ArrayList<Summarize>();
+            for (Summarize summarizeListSummarizeToAttach : years.getSummarizeList()) {
+                summarizeListSummarizeToAttach = em.getReference(summarizeListSummarizeToAttach.getClass(), summarizeListSummarizeToAttach.getSummarizePK());
+                attachedSummarizeList.add(summarizeListSummarizeToAttach);
+            }
+            years.setSummarizeList(attachedSummarizeList);
+            List<Categorys> attachedCategorysList = new ArrayList<Categorys>();
+            for (Categorys categorysListCategorysToAttach : years.getCategorysList()) {
+                categorysListCategorysToAttach = em.getReference(categorysListCategorysToAttach.getClass(), categorysListCategorysToAttach.getCategory());
+                attachedCategorysList.add(categorysListCategorysToAttach);
+            }
+            years.setCategorysList(attachedCategorysList);
             em.persist(years);
             for (Items itemsListItems : years.getItemsList()) {
                 Years oldYearstockOfItemsListItems = itemsListItems.getYearstock();
@@ -80,6 +100,24 @@ public class YearsJpaController implements Serializable {
                 if (oldYearstockOfHistoryListHistory != null) {
                     oldYearstockOfHistoryListHistory.getHistoryList().remove(historyListHistory);
                     oldYearstockOfHistoryListHistory = em.merge(oldYearstockOfHistoryListHistory);
+                }
+            }
+            for (Summarize summarizeListSummarize : years.getSummarizeList()) {
+                Years oldYearsOfSummarizeListSummarize = summarizeListSummarize.getYears();
+                summarizeListSummarize.setYears(years);
+                summarizeListSummarize = em.merge(summarizeListSummarize);
+                if (oldYearsOfSummarizeListSummarize != null) {
+                    oldYearsOfSummarizeListSummarize.getSummarizeList().remove(summarizeListSummarize);
+                    oldYearsOfSummarizeListSummarize = em.merge(oldYearsOfSummarizeListSummarize);
+                }
+            }
+            for (Categorys categorysListCategorys : years.getCategorysList()) {
+                Years oldYearstockOfCategorysListCategorys = categorysListCategorys.getYearstock();
+                categorysListCategorys.setYearstock(years);
+                categorysListCategorys = em.merge(categorysListCategorys);
+                if (oldYearstockOfCategorysListCategorys != null) {
+                    oldYearstockOfCategorysListCategorys.getCategorysList().remove(categorysListCategorys);
+                    oldYearstockOfCategorysListCategorys = em.merge(oldYearstockOfCategorysListCategorys);
                 }
             }
             utx.commit();
@@ -110,6 +148,10 @@ public class YearsJpaController implements Serializable {
             List<Items> itemsListNew = years.getItemsList();
             List<History> historyListOld = persistentYears.getHistoryList();
             List<History> historyListNew = years.getHistoryList();
+            List<Summarize> summarizeListOld = persistentYears.getSummarizeList();
+            List<Summarize> summarizeListNew = years.getSummarizeList();
+            List<Categorys> categorysListOld = persistentYears.getCategorysList();
+            List<Categorys> categorysListNew = years.getCategorysList();
             List<String> illegalOrphanMessages = null;
             for (Items itemsListOldItems : itemsListOld) {
                 if (!itemsListNew.contains(itemsListOldItems)) {
@@ -125,6 +167,22 @@ public class YearsJpaController implements Serializable {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
                     illegalOrphanMessages.add("You must retain History " + historyListOldHistory + " since its yearstock field is not nullable.");
+                }
+            }
+            for (Summarize summarizeListOldSummarize : summarizeListOld) {
+                if (!summarizeListNew.contains(summarizeListOldSummarize)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Summarize " + summarizeListOldSummarize + " since its years field is not nullable.");
+                }
+            }
+            for (Categorys categorysListOldCategorys : categorysListOld) {
+                if (!categorysListNew.contains(categorysListOldCategorys)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Categorys " + categorysListOldCategorys + " since its yearstock field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -144,6 +202,20 @@ public class YearsJpaController implements Serializable {
             }
             historyListNew = attachedHistoryListNew;
             years.setHistoryList(historyListNew);
+            List<Summarize> attachedSummarizeListNew = new ArrayList<Summarize>();
+            for (Summarize summarizeListNewSummarizeToAttach : summarizeListNew) {
+                summarizeListNewSummarizeToAttach = em.getReference(summarizeListNewSummarizeToAttach.getClass(), summarizeListNewSummarizeToAttach.getSummarizePK());
+                attachedSummarizeListNew.add(summarizeListNewSummarizeToAttach);
+            }
+            summarizeListNew = attachedSummarizeListNew;
+            years.setSummarizeList(summarizeListNew);
+            List<Categorys> attachedCategorysListNew = new ArrayList<Categorys>();
+            for (Categorys categorysListNewCategorysToAttach : categorysListNew) {
+                categorysListNewCategorysToAttach = em.getReference(categorysListNewCategorysToAttach.getClass(), categorysListNewCategorysToAttach.getCategory());
+                attachedCategorysListNew.add(categorysListNewCategorysToAttach);
+            }
+            categorysListNew = attachedCategorysListNew;
+            years.setCategorysList(categorysListNew);
             years = em.merge(years);
             for (Items itemsListNewItems : itemsListNew) {
                 if (!itemsListOld.contains(itemsListNewItems)) {
@@ -164,6 +236,28 @@ public class YearsJpaController implements Serializable {
                     if (oldYearstockOfHistoryListNewHistory != null && !oldYearstockOfHistoryListNewHistory.equals(years)) {
                         oldYearstockOfHistoryListNewHistory.getHistoryList().remove(historyListNewHistory);
                         oldYearstockOfHistoryListNewHistory = em.merge(oldYearstockOfHistoryListNewHistory);
+                    }
+                }
+            }
+            for (Summarize summarizeListNewSummarize : summarizeListNew) {
+                if (!summarizeListOld.contains(summarizeListNewSummarize)) {
+                    Years oldYearsOfSummarizeListNewSummarize = summarizeListNewSummarize.getYears();
+                    summarizeListNewSummarize.setYears(years);
+                    summarizeListNewSummarize = em.merge(summarizeListNewSummarize);
+                    if (oldYearsOfSummarizeListNewSummarize != null && !oldYearsOfSummarizeListNewSummarize.equals(years)) {
+                        oldYearsOfSummarizeListNewSummarize.getSummarizeList().remove(summarizeListNewSummarize);
+                        oldYearsOfSummarizeListNewSummarize = em.merge(oldYearsOfSummarizeListNewSummarize);
+                    }
+                }
+            }
+            for (Categorys categorysListNewCategorys : categorysListNew) {
+                if (!categorysListOld.contains(categorysListNewCategorys)) {
+                    Years oldYearstockOfCategorysListNewCategorys = categorysListNewCategorys.getYearstock();
+                    categorysListNewCategorys.setYearstock(years);
+                    categorysListNewCategorys = em.merge(categorysListNewCategorys);
+                    if (oldYearstockOfCategorysListNewCategorys != null && !oldYearstockOfCategorysListNewCategorys.equals(years)) {
+                        oldYearstockOfCategorysListNewCategorys.getCategorysList().remove(categorysListNewCategorys);
+                        oldYearstockOfCategorysListNewCategorys = em.merge(oldYearstockOfCategorysListNewCategorys);
                     }
                 }
             }
@@ -215,6 +309,20 @@ public class YearsJpaController implements Serializable {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
                 illegalOrphanMessages.add("This Years (" + years + ") cannot be destroyed since the History " + historyListOrphanCheckHistory + " in its historyList field has a non-nullable yearstock field.");
+            }
+            List<Summarize> summarizeListOrphanCheck = years.getSummarizeList();
+            for (Summarize summarizeListOrphanCheckSummarize : summarizeListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Years (" + years + ") cannot be destroyed since the Summarize " + summarizeListOrphanCheckSummarize + " in its summarizeList field has a non-nullable years field.");
+            }
+            List<Categorys> categorysListOrphanCheck = years.getCategorysList();
+            for (Categorys categorysListOrphanCheckCategorys : categorysListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Years (" + years + ") cannot be destroyed since the Categorys " + categorysListOrphanCheckCategorys + " in its categorysList field has a non-nullable yearstock field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

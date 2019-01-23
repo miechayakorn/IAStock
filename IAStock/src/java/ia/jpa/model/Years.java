@@ -34,6 +34,11 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Years.findByStatus", query = "SELECT y FROM Years y WHERE y.status = :status")})
 public class Years implements Serializable {
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "years")
+    private List<Summarize> summarizeList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "yearstock")
+    private List<Categorys> categorysList;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -119,6 +124,24 @@ public class Years implements Serializable {
     @Override
     public String toString() {
         return "ia.jpa.model.Years[ yearstock=" + yearstock + " ]";
+    }
+
+    @XmlTransient
+    public List<Summarize> getSummarizeList() {
+        return summarizeList;
+    }
+
+    public void setSummarizeList(List<Summarize> summarizeList) {
+        this.summarizeList = summarizeList;
+    }
+
+    @XmlTransient
+    public List<Categorys> getCategorysList() {
+        return categorysList;
+    }
+
+    public void setCategorysList(List<Categorys> categorysList) {
+        this.categorysList = categorysList;
     }
     
 }

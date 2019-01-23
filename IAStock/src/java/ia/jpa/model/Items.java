@@ -37,6 +37,11 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Items.findByPrice", query = "SELECT i FROM Items i WHERE i.price = :price")})
 public class Items implements Serializable {
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "items")
+    private List<Summarize> summarizeList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "itemid")
+    private List<Categorys> categorysList;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
@@ -163,6 +168,24 @@ public class Items implements Serializable {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    @XmlTransient
+    public List<Summarize> getSummarizeList() {
+        return summarizeList;
+    }
+
+    public void setSummarizeList(List<Summarize> summarizeList) {
+        this.summarizeList = summarizeList;
+    }
+
+    @XmlTransient
+    public List<Categorys> getCategorysList() {
+        return categorysList;
+    }
+
+    public void setCategorysList(List<Categorys> categorysList) {
+        this.categorysList = categorysList;
     }
     
 }
