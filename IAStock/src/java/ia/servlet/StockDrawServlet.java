@@ -2,9 +2,11 @@ package ia.servlet;
 
 import ia.jpa.model.History;
 import ia.jpa.model.Items;
+import ia.jpa.model.Summarize;
 import ia.jpa.model.Years;
 import ia.jpa.model.controller.HistoryJpaController;
 import ia.jpa.model.controller.ItemsJpaController;
+import ia.jpa.model.controller.SummarizeJpaController;
 import ia.jpa.model.controller.YearsJpaController;
 import ia.jpa.model.controller.exceptions.NonexistentEntityException;
 import ia.jpa.model.controller.exceptions.RollbackFailureException;
@@ -54,12 +56,12 @@ public class StockDrawServlet extends HttpServlet {
         if (draw != null && id != null) {
             ItemsJpaController itemJpa = new ItemsJpaController(utx, emf);
             HistoryJpaController historyJpa = new HistoryJpaController(utx, emf);
+            SummarizeJpaController summarizeJpa = new SummarizeJpaController(utx, emf);
 
             for (Items items : itemsYear) {
                 if (items.getItemid().equals(id)) {
                     int drawInt = Integer.parseInt(draw);
                     if (items.getItemtotal() - drawInt < 0) {
-                        System.out.println("error");
                         request.setAttribute("message", "error");
                         request.setAttribute("items", itemsYear);
                         getServletContext().getRequestDispatcher("/Stock_draw.jsp").forward(request, response);
@@ -68,13 +70,18 @@ public class StockDrawServlet extends HttpServlet {
                     int itemTotal = items.getItemtotal() - drawInt;
                     items.setItemtotal(itemTotal);
                     try {
+                        List<Summarize> summarizeList = items.getSummarizeList();
+                        for (Summarize summarizeItem : summarizeList) {
+                            summarizeItem.setDrawtotal((summarizeItem.getDrawtotal() + drawInt));
+                            summarizeJpa.edit(summarizeItem);
+                            break;
+                        }
                         itemJpa.edit(items);
                         History history = new History(items, items.getPrice(), drawInt, "draw", new Date(), yearSearch);
                         if (annotation != null) {
                             history.setAnnotation(annotation);
                         }
                         historyJpa.create(history);
-                        System.out.println("-----------------------------------Success");
                     } catch (NonexistentEntityException ex) {
                         Logger.getLogger(StockAddServlet.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (RollbackFailureException ex) {

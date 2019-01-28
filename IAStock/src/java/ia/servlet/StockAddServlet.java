@@ -2,6 +2,7 @@ package ia.servlet;
 
 import ia.jpa.model.History;
 import ia.jpa.model.Items;
+import ia.jpa.model.Summarize;
 import ia.jpa.model.Years;
 import ia.jpa.model.controller.HistoryJpaController;
 import ia.jpa.model.controller.ItemsJpaController;
@@ -53,7 +54,7 @@ public class StockAddServlet extends HttpServlet {
         if (add != null && id != null) {
             ItemsJpaController itemJpa = new ItemsJpaController(utx, emf);
             HistoryJpaController historyJpa = new HistoryJpaController(utx, emf);
-            SummarizeJpaController Summarize = new SummarizeJpaController(utx, emf);
+            SummarizeJpaController summarizeJpa = new SummarizeJpaController(utx, emf);
 
             for (Items items : itemsYear) {
                 if (items.getItemid().equals(id)) {
@@ -61,13 +62,18 @@ public class StockAddServlet extends HttpServlet {
                     int itemTotal = items.getItemtotal() + addInt;
                     items.setItemtotal(itemTotal);
                     try {
+                        List<Summarize> summarizeList = items.getSummarizeList();
+                        for (Summarize summarizeItem : summarizeList) {
+                            summarizeItem.setAddtotal((summarizeItem.getAddtotal() + addInt));
+                            summarizeJpa.edit(summarizeItem);
+                            break;
+                        }
                         itemJpa.edit(items);
                         History history = new History(items, items.getPrice(), addInt, "add", new Date(), yearSearch);
                         if (annotation != null) {
                             history.setAnnotation(annotation);
                         }
                         historyJpa.create(history);
-                        System.out.println("-----------------------------------Success");
                     } catch (NonexistentEntityException ex) {
                         Logger.getLogger(StockAddServlet.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (RollbackFailureException ex) {
