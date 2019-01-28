@@ -32,6 +32,14 @@
         <servlet-name>StockAddServlet</servlet-name>
         <servlet-class>ia.servlet.StockAddServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>StockDrawServlet</servlet-name>
+        <servlet-class>ia.servlet.StockDrawServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>InsertServlet</servlet-name>
+        <servlet-class>ia.servlet.InsertServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomeServlet</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -59,6 +67,14 @@
     <servlet-mapping>
         <servlet-name>StockAddServlet</servlet-name>
         <url-pattern>/Stock_add</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StockDrawServlet</servlet-name>
+        <url-pattern>/Stock_draw</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InsertServlet</servlet-name>
+        <url-pattern>/Insert</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
