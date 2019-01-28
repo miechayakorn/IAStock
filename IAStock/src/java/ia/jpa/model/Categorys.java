@@ -48,8 +48,10 @@ public class Categorys implements Serializable {
     public Categorys() {
     }
 
-    public Categorys(String category) {
+    public Categorys(String category, Items itemid, Years yearstock) {
         this.category = category;
+        this.itemid = itemid;
+        this.yearstock = yearstock;
     }
 
     public String getCategory() {
@@ -100,5 +102,5 @@ public class Categorys implements Serializable {
     public String toString() {
         return "ia.jpa.model.Categorys[ category=" + category + " ]";
     }
-    
+
 }

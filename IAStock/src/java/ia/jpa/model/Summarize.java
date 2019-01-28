@@ -63,11 +63,13 @@ public class Summarize implements Serializable {
         this.summarizePK = summarizePK;
     }
 
-    public Summarize(SummarizePK summarizePK, int bringforward, int addtotal, int drawtotal) {
+    public Summarize(SummarizePK summarizePK, int bringforward, int addtotal, int drawtotal, Years years, Items items) {
         this.summarizePK = summarizePK;
         this.bringforward = bringforward;
         this.addtotal = addtotal;
         this.drawtotal = drawtotal;
+        this.years = years;
+        this.items = items;
     }
 
     public Summarize(String itemid, String yearstock) {
@@ -146,5 +148,5 @@ public class Summarize implements Serializable {
     public String toString() {
         return "ia.jpa.model.Summarize[ summarizePK=" + summarizePK + " ]";
     }
-    
+
 }

@@ -82,10 +82,13 @@ public class Items implements Serializable {
         this.itemid = itemid;
     }
 
-    public Items(String itemid, String itemname, double price) {
+    public Items(String itemid, String itemname, double price, String unit, Years yearstock) {
         this.itemid = itemid;
         this.itemname = itemname;
         this.price = price;
+        this.itemtotal = 0;
+        this.unit = unit;
+        this.yearstock = yearstock;
     }
 
     public String getItemid() {
@@ -187,5 +190,5 @@ public class Items implements Serializable {
     public void setCategorysList(List<Categorys> categorysList) {
         this.categorysList = categorysList;
     }
-    
+
 }
