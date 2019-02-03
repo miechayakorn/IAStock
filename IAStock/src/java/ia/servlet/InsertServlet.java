@@ -34,6 +34,7 @@ public class InsertServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         String itemId = request.getParameter("itemId");
         String itemName = request.getParameter("itemName");
         String price = request.getParameter("price");
@@ -50,12 +51,13 @@ public class InsertServlet extends HttpServlet {
 
             Years yearSession = yearJpa.findYears((String) session.getAttribute("year"));
             Items item = new Items(itemId, itemName, Double.parseDouble(price), unit, yearSession);
-            
+
             try {
+                Categorys category = new Categorys(categoryParam, item, yearSession);
+                Summarize summarize = new Summarize(0, 0, 0, item, yearSession);
+
                 itemJpa.create(item);
-                Categorys category = new Categorys(categoryParam, itemId, (String) session.getAttribute("year"));
                 categoryJpa.create(category);
-                Summarize summarize = new Summarize(itemId, (String) session.getAttribute("year"), 0, 0, 0);
                 summarizeJpa.create(summarize);
 
             } catch (RollbackFailureException ex) {

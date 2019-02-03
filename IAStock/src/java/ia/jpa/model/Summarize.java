@@ -70,6 +70,15 @@ public class Summarize implements Serializable {
         this.drawtotal = drawtotal;
     }
 
+    public Summarize(int bringforward, int addtotal, int drawtotal, Items items, Years years) {
+        this.summarizePK = new SummarizePK(items.getItemid(), years.getYearstock());
+        this.bringforward = bringforward;
+        this.addtotal = addtotal;
+        this.drawtotal = drawtotal;
+        this.years = years;
+        this.items = items;
+    }
+
     public Summarize(String itemid, String yearstock, int bringforward, int addtotal, int drawtotal) {
         this.summarizePK = new SummarizePK(itemid, yearstock);
         this.bringforward = bringforward;

@@ -164,7 +164,7 @@
                                         <div class="col-md-5">
                                             <div class="form-group">
                                                 <label for="itemName">ชื่อวัสดุ</label><font color="#FD494C"> *</font>
-                                                <input type="text" class="form-control" required placeholder="" name="itemName" id="itemName">
+                                                <input type="text" class="form-control" required placeholder="ตัวอย่าง กระดาษถ่ายเอกสาร A4 80 G" name="itemName" id="itemName">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
@@ -179,20 +179,20 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="price">ราคา</label><font color="#FD494C"> *</font>
-                                                <input type="number" min="0" class="form-control" required placeholder="" name="price" id="price">
+                                                <label for="price">ราคา (บาท)</label><font color="#FD494C"> *</font>
+                                                <input type="number" step="0.01" min="0" class="form-control" required placeholder="ตัวอยา่าง 100.01" name="price" id="price">
                                             </div>
                                         </div>
                                         <div class="col-md-8">
                                             <label for="contact-preference">ประเภท</label><font color="#FD494C"> *</font>
                                             <div class="radio">
                                                 <label>
-                                                    <input type="radio" name="category" required id="contact-preference" value="am">Morning
+                                                    <input type="radio" name="category" required id="contact-preference" value="office">วัสดุสำนักงาน
                                                 </label>
                                             </div>
                                             <div class="radio">
                                                 <label>
-                                                    <input type="radio" name="category" required id="contact-preference" value="pm">Evening
+                                                    <input type="radio" name="category" required id="contact-preference" value="computer">วัสดุคอมพิวเตอร์
                                                 </label>
                                             </div>
                                         </div>

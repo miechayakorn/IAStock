@@ -46,8 +46,10 @@ public class Categorys implements Serializable {
         this.categorysPK = categorysPK;
     }
 
-    public Categorys(String category, String itemid, String yearstock) {
-        this.categorysPK = new CategorysPK(category, itemid, yearstock);
+    public Categorys(String category, Items item, Years yearSession) {
+        this.categorysPK = new CategorysPK(category, item.getItemid(), yearSession.getYearstock());
+        this.years = yearSession;
+        this.items = item;
     }
 
     public CategorysPK getCategorysPK() {
@@ -98,5 +100,5 @@ public class Categorys implements Serializable {
     public String toString() {
         return "ia.jpa.model.Categorys[ categorysPK=" + categorysPK + " ]";
     }
-    
+
 }
