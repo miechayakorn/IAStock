@@ -44,11 +44,12 @@ FOREIGN KEY (itemId) REFERENCES items(itemId));
 ```
 ```sql
 create table categorys (
-category varchar(30) primary key,
+category varchar(30) not null,
 itemId varchar(30) not null,
 yearStock varchar(4) not null,
 FOREIGN KEY (itemId) REFERENCES items(itemId),
-FOREIGN KEY (yearStock) REFERENCES years(yearStock));
+FOREIGN KEY (yearStock) REFERENCES years(yearStock),
+PRIMARY KEY (category, itemId, yearStock));
 ```
 ```sql
 create table summarize (
