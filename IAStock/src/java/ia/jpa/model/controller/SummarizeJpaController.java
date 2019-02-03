@@ -24,7 +24,7 @@ import javax.transaction.UserTransaction;
 
 /**
  *
- * @author User
+ * @author Acer_E5
  */
 public class SummarizeJpaController implements Serializable {
 
@@ -43,8 +43,8 @@ public class SummarizeJpaController implements Serializable {
         if (summarize.getSummarizePK() == null) {
             summarize.setSummarizePK(new SummarizePK());
         }
-        summarize.getSummarizePK().setYearstock(summarize.getYears().getYearstock());
         summarize.getSummarizePK().setItemid(summarize.getItems().getItemid());
+        summarize.getSummarizePK().setYearstock(summarize.getYears().getYearstock());
         EntityManager em = null;
         try {
             utx.begin();
@@ -87,8 +87,8 @@ public class SummarizeJpaController implements Serializable {
     }
 
     public void edit(Summarize summarize) throws NonexistentEntityException, RollbackFailureException, Exception {
-        summarize.getSummarizePK().setYearstock(summarize.getYears().getYearstock());
         summarize.getSummarizePK().setItemid(summarize.getItems().getItemid());
+        summarize.getSummarizePK().setYearstock(summarize.getYears().getYearstock());
         EntityManager em = null;
         try {
             utx.begin();

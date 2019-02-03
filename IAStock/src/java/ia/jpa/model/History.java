@@ -34,17 +34,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "History.findAll", query = "SELECT h FROM History h")
     , @NamedQuery(name = "History.findByHistoryid", query = "SELECT h FROM History h WHERE h.historyid = :historyid")
+    , @NamedQuery(name = "History.findByPrice", query = "SELECT h FROM History h WHERE h.price = :price")
     , @NamedQuery(name = "History.findByQuantity", query = "SELECT h FROM History h WHERE h.quantity = :quantity")
     , @NamedQuery(name = "History.findByType", query = "SELECT h FROM History h WHERE h.type = :type")
     , @NamedQuery(name = "History.findByTimestamp", query = "SELECT h FROM History h WHERE h.timestamp = :timestamp")
-    , @NamedQuery(name = "History.findByAnnotation", query = "SELECT h FROM History h WHERE h.annotation = :annotation")
-    , @NamedQuery(name = "History.findSumQuantity", query = "SELECT SUM(h.quantity) FROM History h WHERE h.itemid = :itemid and h.type = :type and h.yearstock = :year")})
+    , @NamedQuery(name = "History.findByAnnotation", query = "SELECT h FROM History h WHERE h.annotation = :annotation")})
 public class History implements Serializable {
-
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "PRICE")
-    private double price;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -52,6 +47,10 @@ public class History implements Serializable {
     @Basic(optional = false)
     @Column(name = "HISTORYID")
     private Integer historyid;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "PRICE")
+    private double price;
     @Basic(optional = false)
     @NotNull
     @Column(name = "QUANTITY")
@@ -83,13 +82,6 @@ public class History implements Serializable {
         this.historyid = historyid;
     }
 
-    public History(Integer historyid, int quantity, String type, Date timestamp) {
-        this.historyid = historyid;
-        this.quantity = quantity;
-        this.type = type;
-        this.timestamp = timestamp;
-    }
-
     public History(Items itemid, double price, int quantity, String type, Date timestamp, Years yearstock) {
         this.itemid = itemid;
         this.price = price;
@@ -99,12 +91,28 @@ public class History implements Serializable {
         this.yearstock = yearstock;
     }
 
+    public History(Integer historyid, double price, int quantity, String type, Date timestamp) {
+        this.historyid = historyid;
+        this.price = price;
+        this.quantity = quantity;
+        this.type = type;
+        this.timestamp = timestamp;
+    }
+
     public Integer getHistoryid() {
         return historyid;
     }
 
     public void setHistoryid(Integer historyid) {
         this.historyid = historyid;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public int getQuantity() {
@@ -178,14 +186,6 @@ public class History implements Serializable {
     @Override
     public String toString() {
         return "ia.jpa.model.History[ historyid=" + historyid + " ]";
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
 }

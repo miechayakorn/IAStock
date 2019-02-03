@@ -22,7 +22,7 @@ import javax.transaction.UserTransaction;
 
 /**
  *
- * @author User
+ * @author Acer_E5
  */
 public class HistoryJpaController implements Serializable {
 
@@ -199,19 +199,6 @@ public class HistoryJpaController implements Serializable {
         EntityManager em = getEntityManager();
         try {
             return em.find(History.class, id);
-        } finally {
-            em.close();
-        }
-    }
-
-        public Long findSumQuantity(Items itemid, String type, Years year) {
-        EntityManager em = getEntityManager();
-        try {
-            Query query = em.createNamedQuery("History.findSumQuantity");
-            query.setParameter("itemid", itemid);
-            query.setParameter("type", type);
-            query.setParameter("year", year);
-            return (Long) query.getSingleResult();
         } finally {
             em.close();
         }

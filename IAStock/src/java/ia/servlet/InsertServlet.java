@@ -49,15 +49,13 @@ public class InsertServlet extends HttpServlet {
             YearsJpaController yearJpa = new YearsJpaController(utx, emf);
 
             Years yearSession = yearJpa.findYears((String) session.getAttribute("year"));
-
             Items item = new Items(itemId, itemName, Double.parseDouble(price), unit, yearSession);
+            
             try {
                 itemJpa.create(item);
-                Categorys category = new Categorys(categoryParam, item, yearSession);
+                Categorys category = new Categorys(categoryParam, itemId, (String) session.getAttribute("year"));
                 categoryJpa.create(category);
-
-                SummarizePK summarizePK = new SummarizePK(itemId, (String) session.getAttribute("year"));
-                Summarize summarize = new Summarize(summarizePK, 0, 0, 0, yearSession, item);
+                Summarize summarize = new Summarize(itemId, (String) session.getAttribute("year"), 0, 0, 0);
                 summarizeJpa.create(summarize);
 
             } catch (RollbackFailureException ex) {

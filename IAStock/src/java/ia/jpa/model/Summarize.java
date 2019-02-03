@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author User
+ * @author Acer_E5
  */
 @Entity
 @Table(name = "SUMMARIZE")
@@ -63,13 +63,18 @@ public class Summarize implements Serializable {
         this.summarizePK = summarizePK;
     }
 
-    public Summarize(SummarizePK summarizePK, int bringforward, int addtotal, int drawtotal, Years years, Items items) {
+    public Summarize(SummarizePK summarizePK, int bringforward, int addtotal, int drawtotal) {
         this.summarizePK = summarizePK;
         this.bringforward = bringforward;
         this.addtotal = addtotal;
         this.drawtotal = drawtotal;
-        this.years = years;
-        this.items = items;
+    }
+
+    public Summarize(String itemid, String yearstock, int bringforward, int addtotal, int drawtotal) {
+        this.summarizePK = new SummarizePK(itemid, yearstock);
+        this.bringforward = bringforward;
+        this.addtotal = addtotal;
+        this.drawtotal = drawtotal;
     }
 
     public Summarize(String itemid, String yearstock) {

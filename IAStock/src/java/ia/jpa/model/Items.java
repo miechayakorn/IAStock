@@ -34,24 +34,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Items.findAll", query = "SELECT i FROM Items i")
     , @NamedQuery(name = "Items.findByItemid", query = "SELECT i FROM Items i WHERE i.itemid = :itemid")
     , @NamedQuery(name = "Items.findByItemname", query = "SELECT i FROM Items i WHERE i.itemname = :itemname")
-    , @NamedQuery(name = "Items.findByPrice", query = "SELECT i FROM Items i WHERE i.price = :price")})
+    , @NamedQuery(name = "Items.findByItemtotal", query = "SELECT i FROM Items i WHERE i.itemtotal = :itemtotal")
+    , @NamedQuery(name = "Items.findByPrice", query = "SELECT i FROM Items i WHERE i.price = :price")
+    , @NamedQuery(name = "Items.findByUnit", query = "SELECT i FROM Items i WHERE i.unit = :unit")})
 public class Items implements Serializable {
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "items")
-    private List<Summarize> summarizeList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "itemid")
-    private List<Categorys> categorysList;
-
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 20)
-    @Column(name = "UNIT")
-    private String unit;
-
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "ITEMTOTAL")
-    private int itemtotal;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -67,8 +53,21 @@ public class Items implements Serializable {
     private String itemname;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "ITEMTOTAL")
+    private int itemtotal;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "PRICE")
     private double price;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 20)
+    @Column(name = "UNIT")
+    private String unit;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "items")
+    private List<Summarize> summarizeList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "items")
+    private List<Categorys> categorysList;
     @JoinColumn(name = "YEARSTOCK", referencedColumnName = "YEARSTOCK")
     @ManyToOne(optional = false)
     private Years yearstock;
@@ -91,6 +90,14 @@ public class Items implements Serializable {
         this.yearstock = yearstock;
     }
 
+    public Items(String itemid, String itemname, int itemtotal, double price, String unit) {
+        this.itemid = itemid;
+        this.itemname = itemname;
+        this.itemtotal = itemtotal;
+        this.price = price;
+        this.unit = unit;
+    }
+
     public String getItemid() {
         return itemid;
     }
@@ -107,12 +114,46 @@ public class Items implements Serializable {
         this.itemname = itemname;
     }
 
+    public int getItemtotal() {
+        return itemtotal;
+    }
+
+    public void setItemtotal(int itemtotal) {
+        this.itemtotal = itemtotal;
+    }
+
     public double getPrice() {
         return price;
     }
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    @XmlTransient
+    public List<Summarize> getSummarizeList() {
+        return summarizeList;
+    }
+
+    public void setSummarizeList(List<Summarize> summarizeList) {
+        this.summarizeList = summarizeList;
+    }
+
+    @XmlTransient
+    public List<Categorys> getCategorysList() {
+        return categorysList;
+    }
+
+    public void setCategorysList(List<Categorys> categorysList) {
+        this.categorysList = categorysList;
     }
 
     public Years getYearstock() {
@@ -155,40 +196,6 @@ public class Items implements Serializable {
     @Override
     public String toString() {
         return "ia.jpa.model.Items[ itemid=" + itemid + " ]";
-    }
-
-    public int getItemtotal() {
-        return itemtotal;
-    }
-
-    public void setItemtotal(int itemtotal) {
-        this.itemtotal = itemtotal;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    @XmlTransient
-    public List<Summarize> getSummarizeList() {
-        return summarizeList;
-    }
-
-    public void setSummarizeList(List<Summarize> summarizeList) {
-        this.summarizeList = summarizeList;
-    }
-
-    @XmlTransient
-    public List<Categorys> getCategorysList() {
-        return categorysList;
-    }
-
-    public void setCategorysList(List<Categorys> categorysList) {
-        this.categorysList = categorysList;
     }
 
 }

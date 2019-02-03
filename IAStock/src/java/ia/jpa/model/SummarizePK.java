@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 
 /**
  *
- * @author User
+ * @author Acer_E5
  */
 @Embeddable
 public class SummarizePK implements Serializable {

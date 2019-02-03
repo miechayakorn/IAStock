@@ -11,11 +11,11 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import ia.jpa.model.Years;
-import ia.jpa.model.History;
+import ia.jpa.model.Summarize;
 import java.util.ArrayList;
 import java.util.List;
-import ia.jpa.model.Summarize;
 import ia.jpa.model.Categorys;
+import ia.jpa.model.History;
 import ia.jpa.model.Items;
 import ia.jpa.model.controller.exceptions.IllegalOrphanException;
 import ia.jpa.model.controller.exceptions.NonexistentEntityException;
@@ -27,7 +27,7 @@ import javax.transaction.UserTransaction;
 
 /**
  *
- * @author User
+ * @author Acer_E5
  */
 public class ItemsJpaController implements Serializable {
 
@@ -43,14 +43,14 @@ public class ItemsJpaController implements Serializable {
     }
 
     public void create(Items items) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (items.getHistoryList() == null) {
-            items.setHistoryList(new ArrayList<History>());
-        }
         if (items.getSummarizeList() == null) {
             items.setSummarizeList(new ArrayList<Summarize>());
         }
         if (items.getCategorysList() == null) {
             items.setCategorysList(new ArrayList<Categorys>());
+        }
+        if (items.getHistoryList() == null) {
+            items.setHistoryList(new ArrayList<History>());
         }
         EntityManager em = null;
         try {
@@ -61,12 +61,6 @@ public class ItemsJpaController implements Serializable {
                 yearstock = em.getReference(yearstock.getClass(), yearstock.getYearstock());
                 items.setYearstock(yearstock);
             }
-            List<History> attachedHistoryList = new ArrayList<History>();
-            for (History historyListHistoryToAttach : items.getHistoryList()) {
-                historyListHistoryToAttach = em.getReference(historyListHistoryToAttach.getClass(), historyListHistoryToAttach.getHistoryid());
-                attachedHistoryList.add(historyListHistoryToAttach);
-            }
-            items.setHistoryList(attachedHistoryList);
             List<Summarize> attachedSummarizeList = new ArrayList<Summarize>();
             for (Summarize summarizeListSummarizeToAttach : items.getSummarizeList()) {
                 summarizeListSummarizeToAttach = em.getReference(summarizeListSummarizeToAttach.getClass(), summarizeListSummarizeToAttach.getSummarizePK());
@@ -75,23 +69,20 @@ public class ItemsJpaController implements Serializable {
             items.setSummarizeList(attachedSummarizeList);
             List<Categorys> attachedCategorysList = new ArrayList<Categorys>();
             for (Categorys categorysListCategorysToAttach : items.getCategorysList()) {
-                categorysListCategorysToAttach = em.getReference(categorysListCategorysToAttach.getClass(), categorysListCategorysToAttach.getCategory());
+                categorysListCategorysToAttach = em.getReference(categorysListCategorysToAttach.getClass(), categorysListCategorysToAttach.getCategorysPK());
                 attachedCategorysList.add(categorysListCategorysToAttach);
             }
             items.setCategorysList(attachedCategorysList);
+            List<History> attachedHistoryList = new ArrayList<History>();
+            for (History historyListHistoryToAttach : items.getHistoryList()) {
+                historyListHistoryToAttach = em.getReference(historyListHistoryToAttach.getClass(), historyListHistoryToAttach.getHistoryid());
+                attachedHistoryList.add(historyListHistoryToAttach);
+            }
+            items.setHistoryList(attachedHistoryList);
             em.persist(items);
             if (yearstock != null) {
                 yearstock.getItemsList().add(items);
                 yearstock = em.merge(yearstock);
-            }
-            for (History historyListHistory : items.getHistoryList()) {
-                Items oldItemidOfHistoryListHistory = historyListHistory.getItemid();
-                historyListHistory.setItemid(items);
-                historyListHistory = em.merge(historyListHistory);
-                if (oldItemidOfHistoryListHistory != null) {
-                    oldItemidOfHistoryListHistory.getHistoryList().remove(historyListHistory);
-                    oldItemidOfHistoryListHistory = em.merge(oldItemidOfHistoryListHistory);
-                }
             }
             for (Summarize summarizeListSummarize : items.getSummarizeList()) {
                 Items oldItemsOfSummarizeListSummarize = summarizeListSummarize.getItems();
@@ -103,12 +94,21 @@ public class ItemsJpaController implements Serializable {
                 }
             }
             for (Categorys categorysListCategorys : items.getCategorysList()) {
-                Items oldItemidOfCategorysListCategorys = categorysListCategorys.getItemid();
-                categorysListCategorys.setItemid(items);
+                Items oldItemsOfCategorysListCategorys = categorysListCategorys.getItems();
+                categorysListCategorys.setItems(items);
                 categorysListCategorys = em.merge(categorysListCategorys);
-                if (oldItemidOfCategorysListCategorys != null) {
-                    oldItemidOfCategorysListCategorys.getCategorysList().remove(categorysListCategorys);
-                    oldItemidOfCategorysListCategorys = em.merge(oldItemidOfCategorysListCategorys);
+                if (oldItemsOfCategorysListCategorys != null) {
+                    oldItemsOfCategorysListCategorys.getCategorysList().remove(categorysListCategorys);
+                    oldItemsOfCategorysListCategorys = em.merge(oldItemsOfCategorysListCategorys);
+                }
+            }
+            for (History historyListHistory : items.getHistoryList()) {
+                Items oldItemidOfHistoryListHistory = historyListHistory.getItemid();
+                historyListHistory.setItemid(items);
+                historyListHistory = em.merge(historyListHistory);
+                if (oldItemidOfHistoryListHistory != null) {
+                    oldItemidOfHistoryListHistory.getHistoryList().remove(historyListHistory);
+                    oldItemidOfHistoryListHistory = em.merge(oldItemidOfHistoryListHistory);
                 }
             }
             utx.commit();
@@ -137,21 +137,13 @@ public class ItemsJpaController implements Serializable {
             Items persistentItems = em.find(Items.class, items.getItemid());
             Years yearstockOld = persistentItems.getYearstock();
             Years yearstockNew = items.getYearstock();
-            List<History> historyListOld = persistentItems.getHistoryList();
-            List<History> historyListNew = items.getHistoryList();
             List<Summarize> summarizeListOld = persistentItems.getSummarizeList();
             List<Summarize> summarizeListNew = items.getSummarizeList();
             List<Categorys> categorysListOld = persistentItems.getCategorysList();
             List<Categorys> categorysListNew = items.getCategorysList();
+            List<History> historyListOld = persistentItems.getHistoryList();
+            List<History> historyListNew = items.getHistoryList();
             List<String> illegalOrphanMessages = null;
-            for (History historyListOldHistory : historyListOld) {
-                if (!historyListNew.contains(historyListOldHistory)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain History " + historyListOldHistory + " since its itemid field is not nullable.");
-                }
-            }
             for (Summarize summarizeListOldSummarize : summarizeListOld) {
                 if (!summarizeListNew.contains(summarizeListOldSummarize)) {
                     if (illegalOrphanMessages == null) {
@@ -165,7 +157,15 @@ public class ItemsJpaController implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Categorys " + categorysListOldCategorys + " since its itemid field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Categorys " + categorysListOldCategorys + " since its items field is not nullable.");
+                }
+            }
+            for (History historyListOldHistory : historyListOld) {
+                if (!historyListNew.contains(historyListOldHistory)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain History " + historyListOldHistory + " since its itemid field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -175,13 +175,6 @@ public class ItemsJpaController implements Serializable {
                 yearstockNew = em.getReference(yearstockNew.getClass(), yearstockNew.getYearstock());
                 items.setYearstock(yearstockNew);
             }
-            List<History> attachedHistoryListNew = new ArrayList<History>();
-            for (History historyListNewHistoryToAttach : historyListNew) {
-                historyListNewHistoryToAttach = em.getReference(historyListNewHistoryToAttach.getClass(), historyListNewHistoryToAttach.getHistoryid());
-                attachedHistoryListNew.add(historyListNewHistoryToAttach);
-            }
-            historyListNew = attachedHistoryListNew;
-            items.setHistoryList(historyListNew);
             List<Summarize> attachedSummarizeListNew = new ArrayList<Summarize>();
             for (Summarize summarizeListNewSummarizeToAttach : summarizeListNew) {
                 summarizeListNewSummarizeToAttach = em.getReference(summarizeListNewSummarizeToAttach.getClass(), summarizeListNewSummarizeToAttach.getSummarizePK());
@@ -191,11 +184,18 @@ public class ItemsJpaController implements Serializable {
             items.setSummarizeList(summarizeListNew);
             List<Categorys> attachedCategorysListNew = new ArrayList<Categorys>();
             for (Categorys categorysListNewCategorysToAttach : categorysListNew) {
-                categorysListNewCategorysToAttach = em.getReference(categorysListNewCategorysToAttach.getClass(), categorysListNewCategorysToAttach.getCategory());
+                categorysListNewCategorysToAttach = em.getReference(categorysListNewCategorysToAttach.getClass(), categorysListNewCategorysToAttach.getCategorysPK());
                 attachedCategorysListNew.add(categorysListNewCategorysToAttach);
             }
             categorysListNew = attachedCategorysListNew;
             items.setCategorysList(categorysListNew);
+            List<History> attachedHistoryListNew = new ArrayList<History>();
+            for (History historyListNewHistoryToAttach : historyListNew) {
+                historyListNewHistoryToAttach = em.getReference(historyListNewHistoryToAttach.getClass(), historyListNewHistoryToAttach.getHistoryid());
+                attachedHistoryListNew.add(historyListNewHistoryToAttach);
+            }
+            historyListNew = attachedHistoryListNew;
+            items.setHistoryList(historyListNew);
             items = em.merge(items);
             if (yearstockOld != null && !yearstockOld.equals(yearstockNew)) {
                 yearstockOld.getItemsList().remove(items);
@@ -204,17 +204,6 @@ public class ItemsJpaController implements Serializable {
             if (yearstockNew != null && !yearstockNew.equals(yearstockOld)) {
                 yearstockNew.getItemsList().add(items);
                 yearstockNew = em.merge(yearstockNew);
-            }
-            for (History historyListNewHistory : historyListNew) {
-                if (!historyListOld.contains(historyListNewHistory)) {
-                    Items oldItemidOfHistoryListNewHistory = historyListNewHistory.getItemid();
-                    historyListNewHistory.setItemid(items);
-                    historyListNewHistory = em.merge(historyListNewHistory);
-                    if (oldItemidOfHistoryListNewHistory != null && !oldItemidOfHistoryListNewHistory.equals(items)) {
-                        oldItemidOfHistoryListNewHistory.getHistoryList().remove(historyListNewHistory);
-                        oldItemidOfHistoryListNewHistory = em.merge(oldItemidOfHistoryListNewHistory);
-                    }
-                }
             }
             for (Summarize summarizeListNewSummarize : summarizeListNew) {
                 if (!summarizeListOld.contains(summarizeListNewSummarize)) {
@@ -229,12 +218,23 @@ public class ItemsJpaController implements Serializable {
             }
             for (Categorys categorysListNewCategorys : categorysListNew) {
                 if (!categorysListOld.contains(categorysListNewCategorys)) {
-                    Items oldItemidOfCategorysListNewCategorys = categorysListNewCategorys.getItemid();
-                    categorysListNewCategorys.setItemid(items);
+                    Items oldItemsOfCategorysListNewCategorys = categorysListNewCategorys.getItems();
+                    categorysListNewCategorys.setItems(items);
                     categorysListNewCategorys = em.merge(categorysListNewCategorys);
-                    if (oldItemidOfCategorysListNewCategorys != null && !oldItemidOfCategorysListNewCategorys.equals(items)) {
-                        oldItemidOfCategorysListNewCategorys.getCategorysList().remove(categorysListNewCategorys);
-                        oldItemidOfCategorysListNewCategorys = em.merge(oldItemidOfCategorysListNewCategorys);
+                    if (oldItemsOfCategorysListNewCategorys != null && !oldItemsOfCategorysListNewCategorys.equals(items)) {
+                        oldItemsOfCategorysListNewCategorys.getCategorysList().remove(categorysListNewCategorys);
+                        oldItemsOfCategorysListNewCategorys = em.merge(oldItemsOfCategorysListNewCategorys);
+                    }
+                }
+            }
+            for (History historyListNewHistory : historyListNew) {
+                if (!historyListOld.contains(historyListNewHistory)) {
+                    Items oldItemidOfHistoryListNewHistory = historyListNewHistory.getItemid();
+                    historyListNewHistory.setItemid(items);
+                    historyListNewHistory = em.merge(historyListNewHistory);
+                    if (oldItemidOfHistoryListNewHistory != null && !oldItemidOfHistoryListNewHistory.equals(items)) {
+                        oldItemidOfHistoryListNewHistory.getHistoryList().remove(historyListNewHistory);
+                        oldItemidOfHistoryListNewHistory = em.merge(oldItemidOfHistoryListNewHistory);
                     }
                 }
             }
@@ -273,13 +273,6 @@ public class ItemsJpaController implements Serializable {
                 throw new NonexistentEntityException("The items with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<History> historyListOrphanCheck = items.getHistoryList();
-            for (History historyListOrphanCheckHistory : historyListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Items (" + items + ") cannot be destroyed since the History " + historyListOrphanCheckHistory + " in its historyList field has a non-nullable itemid field.");
-            }
             List<Summarize> summarizeListOrphanCheck = items.getSummarizeList();
             for (Summarize summarizeListOrphanCheckSummarize : summarizeListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
@@ -292,7 +285,14 @@ public class ItemsJpaController implements Serializable {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Items (" + items + ") cannot be destroyed since the Categorys " + categorysListOrphanCheckCategorys + " in its categorysList field has a non-nullable itemid field.");
+                illegalOrphanMessages.add("This Items (" + items + ") cannot be destroyed since the Categorys " + categorysListOrphanCheckCategorys + " in its categorysList field has a non-nullable items field.");
+            }
+            List<History> historyListOrphanCheck = items.getHistoryList();
+            for (History historyListOrphanCheckHistory : historyListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Items (" + items + ") cannot be destroyed since the History " + historyListOrphanCheckHistory + " in its historyList field has a non-nullable itemid field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

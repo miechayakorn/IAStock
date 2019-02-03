@@ -6,82 +6,78 @@
 package ia.jpa.model;
 
 import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author User
+ * @author Acer_E5
  */
 @Entity
 @Table(name = "CATEGORYS")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Categorys.findAll", query = "SELECT c FROM Categorys c")
-    , @NamedQuery(name = "Categorys.findByCategory", query = "SELECT c FROM Categorys c WHERE c.category = :category")})
+    , @NamedQuery(name = "Categorys.findByCategory", query = "SELECT c FROM Categorys c WHERE c.categorysPK.category = :category")
+    , @NamedQuery(name = "Categorys.findByItemid", query = "SELECT c FROM Categorys c WHERE c.categorysPK.itemid = :itemid")
+    , @NamedQuery(name = "Categorys.findByYearstock", query = "SELECT c FROM Categorys c WHERE c.categorysPK.yearstock = :yearstock")})
 public class Categorys implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 30)
-    @Column(name = "CATEGORY")
-    private String category;
-    @JoinColumn(name = "ITEMID", referencedColumnName = "ITEMID")
+    @EmbeddedId
+    protected CategorysPK categorysPK;
+    @JoinColumn(name = "ITEMID", referencedColumnName = "ITEMID", insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private Items itemid;
-    @JoinColumn(name = "YEARSTOCK", referencedColumnName = "YEARSTOCK")
+    private Items items;
+    @JoinColumn(name = "YEARSTOCK", referencedColumnName = "YEARSTOCK", insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private Years yearstock;
+    private Years years;
 
     public Categorys() {
     }
 
-    public Categorys(String category, Items itemid, Years yearstock) {
-        this.category = category;
-        this.itemid = itemid;
-        this.yearstock = yearstock;
+    public Categorys(CategorysPK categorysPK) {
+        this.categorysPK = categorysPK;
     }
 
-    public String getCategory() {
-        return category;
+    public Categorys(String category, String itemid, String yearstock) {
+        this.categorysPK = new CategorysPK(category, itemid, yearstock);
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public CategorysPK getCategorysPK() {
+        return categorysPK;
     }
 
-    public Items getItemid() {
-        return itemid;
+    public void setCategorysPK(CategorysPK categorysPK) {
+        this.categorysPK = categorysPK;
     }
 
-    public void setItemid(Items itemid) {
-        this.itemid = itemid;
+    public Items getItems() {
+        return items;
     }
 
-    public Years getYearstock() {
-        return yearstock;
+    public void setItems(Items items) {
+        this.items = items;
     }
 
-    public void setYearstock(Years yearstock) {
-        this.yearstock = yearstock;
+    public Years getYears() {
+        return years;
+    }
+
+    public void setYears(Years years) {
+        this.years = years;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (category != null ? category.hashCode() : 0);
+        hash += (categorysPK != null ? categorysPK.hashCode() : 0);
         return hash;
     }
 
@@ -92,7 +88,7 @@ public class Categorys implements Serializable {
             return false;
         }
         Categorys other = (Categorys) object;
-        if ((this.category == null && other.category != null) || (this.category != null && !this.category.equals(other.category))) {
+        if ((this.categorysPK == null && other.categorysPK != null) || (this.categorysPK != null && !this.categorysPK.equals(other.categorysPK))) {
             return false;
         }
         return true;
@@ -100,7 +96,7 @@ public class Categorys implements Serializable {
 
     @Override
     public String toString() {
-        return "ia.jpa.model.Categorys[ category=" + category + " ]";
+        return "ia.jpa.model.Categorys[ categorysPK=" + categorysPK + " ]";
     }
-
+    
 }

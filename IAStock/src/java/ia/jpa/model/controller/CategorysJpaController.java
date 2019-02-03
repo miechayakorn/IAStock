@@ -6,6 +6,7 @@
 package ia.jpa.model.controller;
 
 import ia.jpa.model.Categorys;
+import ia.jpa.model.CategorysPK;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -23,7 +24,7 @@ import javax.transaction.UserTransaction;
 
 /**
  *
- * @author User
+ * @author Acer_E5
  */
 public class CategorysJpaController implements Serializable {
 
@@ -39,28 +40,33 @@ public class CategorysJpaController implements Serializable {
     }
 
     public void create(Categorys categorys) throws PreexistingEntityException, RollbackFailureException, Exception {
+        if (categorys.getCategorysPK() == null) {
+            categorys.setCategorysPK(new CategorysPK());
+        }
+        categorys.getCategorysPK().setItemid(categorys.getItems().getItemid());
+        categorys.getCategorysPK().setYearstock(categorys.getYears().getYearstock());
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Items itemid = categorys.getItemid();
-            if (itemid != null) {
-                itemid = em.getReference(itemid.getClass(), itemid.getItemid());
-                categorys.setItemid(itemid);
+            Items items = categorys.getItems();
+            if (items != null) {
+                items = em.getReference(items.getClass(), items.getItemid());
+                categorys.setItems(items);
             }
-            Years yearstock = categorys.getYearstock();
-            if (yearstock != null) {
-                yearstock = em.getReference(yearstock.getClass(), yearstock.getYearstock());
-                categorys.setYearstock(yearstock);
+            Years years = categorys.getYears();
+            if (years != null) {
+                years = em.getReference(years.getClass(), years.getYearstock());
+                categorys.setYears(years);
             }
             em.persist(categorys);
-            if (itemid != null) {
-                itemid.getCategorysList().add(categorys);
-                itemid = em.merge(itemid);
+            if (items != null) {
+                items.getCategorysList().add(categorys);
+                items = em.merge(items);
             }
-            if (yearstock != null) {
-                yearstock.getCategorysList().add(categorys);
-                yearstock = em.merge(yearstock);
+            if (years != null) {
+                years.getCategorysList().add(categorys);
+                years = em.merge(years);
             }
             utx.commit();
         } catch (Exception ex) {
@@ -69,7 +75,7 @@ public class CategorysJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findCategorys(categorys.getCategory()) != null) {
+            if (findCategorys(categorys.getCategorysPK()) != null) {
                 throw new PreexistingEntityException("Categorys " + categorys + " already exists.", ex);
             }
             throw ex;
@@ -81,39 +87,41 @@ public class CategorysJpaController implements Serializable {
     }
 
     public void edit(Categorys categorys) throws NonexistentEntityException, RollbackFailureException, Exception {
+        categorys.getCategorysPK().setItemid(categorys.getItems().getItemid());
+        categorys.getCategorysPK().setYearstock(categorys.getYears().getYearstock());
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Categorys persistentCategorys = em.find(Categorys.class, categorys.getCategory());
-            Items itemidOld = persistentCategorys.getItemid();
-            Items itemidNew = categorys.getItemid();
-            Years yearstockOld = persistentCategorys.getYearstock();
-            Years yearstockNew = categorys.getYearstock();
-            if (itemidNew != null) {
-                itemidNew = em.getReference(itemidNew.getClass(), itemidNew.getItemid());
-                categorys.setItemid(itemidNew);
+            Categorys persistentCategorys = em.find(Categorys.class, categorys.getCategorysPK());
+            Items itemsOld = persistentCategorys.getItems();
+            Items itemsNew = categorys.getItems();
+            Years yearsOld = persistentCategorys.getYears();
+            Years yearsNew = categorys.getYears();
+            if (itemsNew != null) {
+                itemsNew = em.getReference(itemsNew.getClass(), itemsNew.getItemid());
+                categorys.setItems(itemsNew);
             }
-            if (yearstockNew != null) {
-                yearstockNew = em.getReference(yearstockNew.getClass(), yearstockNew.getYearstock());
-                categorys.setYearstock(yearstockNew);
+            if (yearsNew != null) {
+                yearsNew = em.getReference(yearsNew.getClass(), yearsNew.getYearstock());
+                categorys.setYears(yearsNew);
             }
             categorys = em.merge(categorys);
-            if (itemidOld != null && !itemidOld.equals(itemidNew)) {
-                itemidOld.getCategorysList().remove(categorys);
-                itemidOld = em.merge(itemidOld);
+            if (itemsOld != null && !itemsOld.equals(itemsNew)) {
+                itemsOld.getCategorysList().remove(categorys);
+                itemsOld = em.merge(itemsOld);
             }
-            if (itemidNew != null && !itemidNew.equals(itemidOld)) {
-                itemidNew.getCategorysList().add(categorys);
-                itemidNew = em.merge(itemidNew);
+            if (itemsNew != null && !itemsNew.equals(itemsOld)) {
+                itemsNew.getCategorysList().add(categorys);
+                itemsNew = em.merge(itemsNew);
             }
-            if (yearstockOld != null && !yearstockOld.equals(yearstockNew)) {
-                yearstockOld.getCategorysList().remove(categorys);
-                yearstockOld = em.merge(yearstockOld);
+            if (yearsOld != null && !yearsOld.equals(yearsNew)) {
+                yearsOld.getCategorysList().remove(categorys);
+                yearsOld = em.merge(yearsOld);
             }
-            if (yearstockNew != null && !yearstockNew.equals(yearstockOld)) {
-                yearstockNew.getCategorysList().add(categorys);
-                yearstockNew = em.merge(yearstockNew);
+            if (yearsNew != null && !yearsNew.equals(yearsOld)) {
+                yearsNew.getCategorysList().add(categorys);
+                yearsNew = em.merge(yearsNew);
             }
             utx.commit();
         } catch (Exception ex) {
@@ -124,7 +132,7 @@ public class CategorysJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                String id = categorys.getCategory();
+                CategorysPK id = categorys.getCategorysPK();
                 if (findCategorys(id) == null) {
                     throw new NonexistentEntityException("The categorys with id " + id + " no longer exists.");
                 }
@@ -137,7 +145,7 @@ public class CategorysJpaController implements Serializable {
         }
     }
 
-    public void destroy(String id) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(CategorysPK id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
@@ -145,19 +153,19 @@ public class CategorysJpaController implements Serializable {
             Categorys categorys;
             try {
                 categorys = em.getReference(Categorys.class, id);
-                categorys.getCategory();
+                categorys.getCategorysPK();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The categorys with id " + id + " no longer exists.", enfe);
             }
-            Items itemid = categorys.getItemid();
-            if (itemid != null) {
-                itemid.getCategorysList().remove(categorys);
-                itemid = em.merge(itemid);
+            Items items = categorys.getItems();
+            if (items != null) {
+                items.getCategorysList().remove(categorys);
+                items = em.merge(items);
             }
-            Years yearstock = categorys.getYearstock();
-            if (yearstock != null) {
-                yearstock.getCategorysList().remove(categorys);
-                yearstock = em.merge(yearstock);
+            Years years = categorys.getYears();
+            if (years != null) {
+                years.getCategorysList().remove(categorys);
+                years = em.merge(years);
             }
             em.remove(categorys);
             utx.commit();
@@ -199,7 +207,7 @@ public class CategorysJpaController implements Serializable {
         }
     }
 
-    public Categorys findCategorys(String id) {
+    public Categorys findCategorys(CategorysPK id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Categorys.class, id);
